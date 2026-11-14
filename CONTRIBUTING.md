@@ -30,11 +30,7 @@ rama sin entrada es una rama que nadie va a saber para qué estaba.
 
 | Rama | Desde | Para qué | PR |
 |---|---|---|---|
-<<<<<<< HEAD
 | `claude/traspaso-dependabot` | `main` @ `f39030d` (2026-11-14) | `TRASPASO.md` al día con el merge del #99 y el triaje de Dependabot #100 a #106 | #107 |
-=======
-| `claude/b03-migraciones-versionadas` | `main` @ `eca5e8a` (2026-11-06), con `main` @ `235a630` integrado | B-03: migraciones versionadas con `schema_migrations`; rehace el #23 | #99 |
->>>>>>> origin/main
 
 ### Reglas
 
