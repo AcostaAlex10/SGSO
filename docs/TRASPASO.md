@@ -112,6 +112,7 @@ Programador**. Para no pisarse:
 
 | Ítem | Sesión | Estado | Pendiente |
 |---|---|---|---|
+| D-06 (RF37, resúmenes CSV y PDF) | Nube | En curso desde el 2026-11-14, rama `claude/d06-resumenes` | — |
 | B-03 (PR #99, migraciones versionadas) | Local | Hecho en el #99; migraciones corridas en Aiven el 2026-11-07, sin cambios; el #23 se cerró | El visto bueno de Alex para mergear. Decidir si se automatiza en el arranque de Render |
 
 **Estado del repositorio al 2026-11-06** (revisado con `gh` y `origin/main`):

@@ -30,6 +30,7 @@ rama sin entrada es una rama que nadie va a saber para qué estaba.
 
 | Rama | Desde | Para qué | PR |
 |---|---|---|---|
+| `claude/d06-resumenes` | `main` @ `823e7e5` (2026-11-14) | D-06 (RF37): exportar los resúmenes de avance y materiales de una obra en CSV y PDF por impresión, sin dependencias | — |
 | `claude/b03-migraciones-versionadas` | `main` @ `eca5e8a` (2026-11-06), con `main` @ `235a630` integrado | B-03: migraciones versionadas con `schema_migrations`; rehace el #23 | #99 |
 
 ### Reglas
