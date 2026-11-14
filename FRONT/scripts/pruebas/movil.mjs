@@ -36,6 +36,22 @@ const VIEWPORTS = [
 ];
 const HORIZONTAL = { nombre: '640x360', width: 640, height: 360 };
 
+// Estados que se abren con un clic: se miden igual que la pantalla.
+const elegirObra = async (page) => {
+  await page.getByRole('combobox').first().click();
+  await page.getByRole('option').first().click();
+};
+const ESTADOS = {
+  '/seguimiento': [{ nombre: 'con obra elegida', abrir: elegirObra }],
+  '/materiales': [{ nombre: 'con obra elegida', abrir: elegirObra }],
+  '/documentacion': [{ nombre: 'con obra elegida', abrir: elegirObra }],
+  '/maquinaria': [0, 1, 2].map((i) => ({
+    nombre: `panel de la maquina ${i + 1}`,
+    abrir: async (page) => { await page.getByRole('button', { name: 'Ver uso y fallas' }).nth(i).click();
+      await page.getByText(/— uso y fallas/).scrollIntoViewIfNeeded(); },
+  })),
+};
+
 const resultados = [];
 const informe = []; // informativo, no falla
 function chequear(donde, que, ok, detalle = '') {
@@ -135,8 +151,18 @@ function medirDialogo() {
       botonesFuera.push(`"${(b.textContent || '').trim().slice(0, 20)}"@${Math.round(r.top)}..${Math.round(r.bottom)}`);
   }
   const abajo = d.scrollHeight - d.clientHeight - d.scrollTop <= 1;
+  const botones = [...d.querySelectorAll('button')].filter((b) => !(b.querySelector('.sr-only') && b.getBoundingClientRect().width < 30) && b.getBoundingClientRect().width > 0);
+  // Campos aplastados: en anchos < 640 un campo no puede medir menos del 60% del dialogo.
+  const angostos = [];
+  if (vw < 640) {
+    for (const c of d.querySelectorAll('input, textarea, [role=combobox]')) {
+      const r = c.getBoundingClientRect();
+      if (r.width <= 0 || r.height <= 0 || c.type === 'checkbox' || c.type === 'hidden') continue;
+      if (r.width < 0.6 * d.clientWidth) angostos.push(`${c.id || c.tagName.toLowerCase()}:${Math.round(r.width)}/${d.clientWidth}`);
+    }
+  }
   d.scrollTop = 0;
-  return { cabe, fueraAncho, scrollable, recorrible, botonesFuera, abajo, alto: Math.round(r0.height), scrollH: d.scrollHeight, vh };
+  return { angostos, abajo, hayBotones: botones.length > 0, cabe, fueraAncho, scrollable, recorrible, botonesFuera, abajo, alto: Math.round(r0.height), scrollH: d.scrollHeight, vh };
 }
 
 // --- Ayudas de navegacion --------------------------------------------------
@@ -144,6 +170,7 @@ function medirDialogo() {
 async function abrirSesion(navegador, vp, rol, opts = {}) {
   const ctx = await navegador.newContext({
     viewport: { width: vp.width, height: vp.height }, isMobile: true, hasTouch: true, deviceScaleFactor: 2,
+    locale: 'es-AR', timezoneId: 'America/Argentina/Buenos_Aires',
   });
   const page = await ctx.newPage();
   const errores = [];
@@ -164,7 +191,10 @@ async function irA(page, ruta) {
   await page.waitForTimeout(900);
 }
 
-const ruidoConsola = (e) => /favicon|Download the React DevTools|ERR_CERT_AUTHORITY_INVALID/i.test(e);
+// ERR_CERT_AUTHORITY_INVALID (Google Fonts) solo se ignora si SGSO_IGNORAR_CERT=1:
+// en la nube el proxy intercepta TLS. En una red normal es un error real.
+const ruidoConsola = (e) => /favicon|Download the React DevTools/i.test(e)
+  || (process.env.SGSO_IGNORAR_CERT === '1' && /ERR_CERT_AUTHORITY_INVALID/.test(e));
 
 // --- Corrida ---------------------------------------------------------------
 
@@ -182,6 +212,23 @@ for (const vp of VIEWPORTS) {
       chequear(donde, 'sin scroll horizontal de la pagina', !m.hscrollDoc, m.hscrollDoc ? `scrollWidth ${m.sw} > ${m.cw}` : '');
       chequear(donde, 'sin scroll horizontal de main', !m.hscrollMain);
       chequear(donde, 'nada fuera del viewport fuera de un scroll', m.fuera.length === 0, m.fuera.slice(0, 4).join(' | '));
+      if (plan.rol === 'tecnico') {
+        for (const est of ESTADOS[ruta] ?? []) {
+          const dondeE = `${donde} ${est.nombre}`;
+          await page.reload({ waitUntil: 'networkidle' });
+          await page.waitForTimeout(700);
+          const abrio = await est.abrir(page).then(() => true, () => false);
+          await page.waitForTimeout(700);
+          chequear(dondeE, 'el estado se abre', abrio);
+          if (!abrio) continue;
+          const me = await page.evaluate(medirPagina);
+          await page.screenshot({ path: join(CAPTURAS, `${vp.nombre}_${quien}_${slug(ruta)}_${slug(est.nombre)}.png`) });
+          chequear(dondeE, 'sin scroll horizontal de la pagina', !me.hscrollDoc, me.hscrollDoc ? `scrollWidth ${me.sw} > ${me.cw}` : '');
+          chequear(dondeE, 'sin scroll horizontal de main', !me.hscrollMain);
+          chequear(dondeE, 'nada fuera del viewport fuera de un scroll', me.fuera.length === 0, me.fuera.slice(0, 4).join(' | '));
+          informe.push({ donde: dondeE, m44: me.menor44, m24: me.menor24, chicos: me.chicos, t12: me.texto12, textos: me.textos, num: me.numSinModo });
+        }
+      }
       informe.push({ donde, m44: m.menor44, m24: m.menor24, chicos: m.chicos, t12: m.texto12, textos: m.textos, num: m.numSinModo });
     }
 
@@ -229,8 +276,9 @@ for (const vp of VIEWPORTS) {
         const donde = `${vp.nombre} ${quien} dialogo ${c.nombre}`;
         chequear(donde, 'el dialogo abre', !!dd);
         if (dd) {
-          chequear(donde, 'se puede recorrer o cabe', dd.recorrible && (dd.cabe || dd.scrollable), `alto ${dd.alto}/${dd.vh}, contenido ${dd.scrollH}, scroll ${dd.scrollable}`);
-          chequear(donde, 'botones de accion alcanzables al final', dd.botonesFuera.length === 0 && !dd.fueraAncho, dd.botonesFuera.join(' | '));
+          chequear(donde, 'se puede llegar al final del dialogo', dd.abajo, `alto ${dd.alto}/${dd.vh}, contenido ${dd.scrollH}`);
+          chequear(donde, 'botones de accion visibles al final', dd.hayBotones && dd.botonesFuera.length === 0 && !dd.fueraAncho, dd.botonesFuera.join(' | '));
+          chequear(donde, 'campos a mas del 60% del ancho del dialogo', dd.angostos.length === 0, dd.angostos.slice(0, 4).join(' | '));
           await page.screenshot({ path: join(CAPTURAS, `${vp.nombre}_dialogo_${slug(c.nombre)}.png`) });
         }
         await page.keyboard.press('Escape');
@@ -256,8 +304,8 @@ for (const vp of VIEWPORTS) {
     const donde = `${HORIZONTAL.nombre} dialogo ${c.nombre}`;
     chequear(donde, 'el dialogo abre', !!dd);
     if (dd) {
-      chequear(donde, 'se puede recorrer o cabe', dd.recorrible && (dd.cabe || dd.scrollable), `alto ${dd.alto}/${dd.vh}, contenido ${dd.scrollH}, scroll ${dd.scrollable}`);
-      chequear(donde, 'botones de accion alcanzables al final', dd.botonesFuera.length === 0 && !dd.fueraAncho, dd.botonesFuera.join(' | '));
+      chequear(donde, 'se puede llegar al final del dialogo', dd.abajo, `alto ${dd.alto}/${dd.vh}, contenido ${dd.scrollH}`);
+      chequear(donde, 'botones de accion visibles al final', dd.hayBotones && dd.botonesFuera.length === 0 && !dd.fueraAncho, dd.botonesFuera.join(' | '));
       await page.screenshot({ path: join(CAPTURAS, `${HORIZONTAL.nombre}_dialogo_${slug(c.nombre)}.png`) });
     }
     await page.keyboard.press('Escape');

@@ -315,14 +315,14 @@ export default function MaquinariaPage() {
               {registros.length === 0 ? <p className="text-muted-foreground text-sm">Sin registros de uso.</p> : (
                 <div className="space-y-1">
                   {registros.map((r) => (
-                    <div key={r.id_registro} className="flex items-center gap-3 border rounded-md px-3 py-2 text-sm">
+                    <div key={r.id_registro} className="flex flex-wrap items-center gap-x-3 gap-y-1 border rounded-md px-3 py-2 text-sm">
                       <span className="text-muted-foreground w-24">{fmtFecha(r.fecha)}</span>
                       <span className="w-32">{r.operario ?? "—"}</span>
                       <span>{r.horas_uso} h</span>
                       <span>{r.combustible_consumido} L</span>
                       <span className="text-muted-foreground">{r.combustible_por_hora} L/h</span>
                       {r.alerta_consumo && <Badge variant="destructive" className="gap-1"><AlertTriangle className="w-3 h-3" /> Consumo alto</Badge>}
-                      <span className="flex-1 text-right">Prod. {r.produccion_realizada}</span>
+                      <span className="flex-1 min-w-[5rem] text-right">Prod. {r.produccion_realizada}</span>
                       {carga && <Button size="sm" variant="ghost" onClick={() => eliminarRegistroMaq(r.id_registro).then(recargarSel).catch(() => toast.error("Error"))}><Trash2 className="w-4 h-4" style={{ color: "#ef4444" }} /></Button>}
                     </div>
                   ))}
@@ -345,10 +345,10 @@ export default function MaquinariaPage() {
               {fallas.length === 0 ? <p className="text-muted-foreground text-sm">Sin fallas registradas.</p> : (
                 <div className="space-y-1">
                   {fallas.map((f) => (
-                    <div key={f.id_falla} className="flex items-center gap-3 border rounded-md px-3 py-2 text-sm">
+                    <div key={f.id_falla} className="flex flex-wrap items-center gap-x-3 gap-y-1 border rounded-md px-3 py-2 text-sm">
                       <span className="text-muted-foreground w-24">{fmtFecha(f.fecha)}</span>
                       {f.componente && <Badge variant="secondary">{f.componente}</Badge>}
-                      <span className="flex-1">{f.descripcion}</span>
+                      <span className="flex-1 min-w-[8rem]">{f.descripcion}</span>
                       {f.reemplazo && <Badge variant="outline">Reemplazo</Badge>}
                       {f.resuelto ? <Badge variant="secondary">Resuelta</Badge> : <Badge variant="destructive">Abierta</Badge>}
                       {carga && <Button size="sm" variant="outline" onClick={() => marcarFalla(f)}>{f.resuelto ? "Reabrir" : "Marcar resuelta"}</Button>}

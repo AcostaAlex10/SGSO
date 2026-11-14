@@ -107,6 +107,16 @@ export default function Root() {
     navigate("/login", { replace: true });
   }
 
+  // Bajo lg el menu cerrado no debe tabularse ni leerse; en lg siempre esta visible.
+  const [esLg, setEsLg] = useState(() => typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const f = () => setEsLg(mq.matches);
+    mq.addEventListener("change", f);
+    return () => mq.removeEventListener("change", f);
+  }, []);
+  const menuInerte = !esLg && !mobileOpen;
+
   const isActive = (path: string) => {
     if (path === "/") return location.pathname === path;
     return location.pathname.startsWith(path);
@@ -120,6 +130,8 @@ export default function Root() {
 
       {/* Sidebar */}
       <aside
+        id="menu-lateral"
+        {...(menuInerte ? ({ inert: "" } as object) : {})}
         className={`
           fixed inset-y-0 left-0 z-50 flex flex-col transition-transform duration-200 print:hidden
           lg:relative lg:translate-x-0
@@ -260,7 +272,7 @@ export default function Root() {
             </div>
             <button
               onClick={handleLogout}
-              title="Cerrar sesion"
+              title="Cerrar sesión"
               aria-label="Cerrar sesión"
               className="ml-auto flex items-center justify-center min-h-[44px] min-w-[44px] -my-2 -mr-2"
               style={{ color: "var(--muted-foreground)", background: "transparent", border: "none", cursor: "pointer", padding: "4px" }}
@@ -312,6 +324,8 @@ export default function Root() {
             <button
               className="lg:hidden flex items-center justify-center min-h-[44px] min-w-[44px] -ml-3"
               aria-label="Abrir menú"
+              aria-expanded={mobileOpen}
+              aria-controls="menu-lateral"
               style={{ color: "var(--muted-foreground)", padding: "4px" }}
               onClick={() => setMobileOpen(true)}
             >

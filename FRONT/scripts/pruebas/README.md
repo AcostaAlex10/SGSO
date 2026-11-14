@@ -29,7 +29,7 @@ diálogos que no se pueden recorrer o con botones de acción fuera de pantalla, 
 menú y cerrar sesión menores a 44x44. **Solo informa** (no falla) cuántos objetivos
 táctiles miden menos de 44 y de 24 px por pantalla, cuántos textos son menores a 12 px y
 los inputs numéricos sin `inputMode`. Guarda capturas en `SGSO_CAPTURAS` (por defecto
-`$TMPDIR/sgso-movil`, fuera del repo). Si el Chromium instalado no coincide con la versión
+`$TMPDIR/sgso-movil`, fuera del repo). Los errores `ERR_CERT_AUTHORITY_INVALID` (Google Fonts) cuentan como error de consola salvo que se corra con `SGSO_IGNORAR_CERT=1`; en la nube hace falta, porque el proxy intercepta TLS. Si el Chromium instalado no coincide con la versión
 de Playwright, `SGSO_CHROMIUM=/ruta/a/chrome` fija el ejecutable. **No está en el CI
 todavía**: cablearlo toca `.github/workflows/ci.yml` y lo decide Alex. Correr con
 `node scripts/pruebas/movil.mjs`.
