@@ -4,10 +4,10 @@ Este archivo existe porque las sesiones locales de Claude Code se pierden con
 cada corte de luz o reinicio brusco. **Lo que no está acá ni en el repositorio,
 se perdió.** Una sesión nueva empieza leyendo esto.
 
-- **Actualizado:** 2026-11-07, con B-03 en el PR #99 (sección 3). El 2026-11-03 el producto volvió
+- **Actualizado:** 2026-11-14, desde la sesión en la nube: B-03 mergeado (#99) y triaje de Dependabot #100 a #106 (sección 3). El 2026-11-03 el producto volvió
   a llamarse **SGSO** (Sistema de Gestión y Seguimiento Operativo de obras,
   DEC-01); el repositorio de GitHub también se renombró a `SGSO`
-- **Base:** `main` @ `235a630` (2026-11-07, #98; CI en verde). **La base de Aiven se volvió a apagar** y se
+- **Base:** `main` @ `f39030d` (2026-11-06, #99). **La base de Aiven se volvió a apagar** y se
   encendió el 2026-11-04 (riesgo R-01): `/api/health` responde
   `{"status":"ok","db":"ok"}`. **La URL de producción ahora es
   `https://sgsos.vercel.app`**; la anterior sigue conectada. **Brevo ya funciona**: Alex
@@ -112,7 +112,8 @@ Programador**. Para no pisarse:
 
 | Ítem | Sesión | Estado | Pendiente |
 |---|---|---|---|
-| B-03 (PR #99, migraciones versionadas) | Local | Hecho en el #99; migraciones corridas en Aiven el 2026-11-07, sin cambios; el #23 se cerró | El visto bueno de Alex para mergear. Decidir si se automatiza en el arranque de Render |
+| B-03 (PR #99, migraciones versionadas) | Local | **Mergeado** el 2026-11-06 (`f39030d`); migraciones corridas en Aiven el 2026-11-07, sin cambios; el #23 se cerró | Decisión de Alex: si `migrar.php` se corre solo en el arranque de Render. Borrar la rama vieja `claude/migraciones-versionadas` (pide a Alex) |
+| Triaje de Dependabot #100 a #106 | Nube | Hecho el 2026-11-14 (ver "PR abiertos"); nada mergeado | El visto bueno de Alex para cada PR |
 
 **Estado del repositorio al 2026-11-06** (revisado con `gh` y `origin/main`):
 `main` @ `eca5e8a` con CI en verde en los últimos cinco pushes. El único PR
@@ -175,24 +176,38 @@ Riesgo R-10 de `OPERACION.md` §8.
 
 ### PR abiertos
 
-Al 2026-11-07 **el único PR abierto es el #99**. El #23 se cerró sin mergear:
-quedó atrás de `main` y apagaba la verificación TLS de la base (A-19).
+Al 2026-11-14 **los únicos PR abiertos son siete de Dependabot** (#100 a #106,
+del 2026-11-09). El #99 (B-03) se mergeó el 2026-11-06 y el #23 se cerró sin
+mergear. Para la próxima migración, lo mismo que con B-03:
 
-- **#99 (B-03, migraciones versionadas).** Rehace el #23 sobre `main`, con dos
-  revisiones de un agente distinto. **Las migraciones ya se corrieron en Aiven**
-  (Alex, 2026-11-07): `0001` a `0003` quedaron registradas sin ejecutarse, `0004`
-  y `0005` no cambiaron nada, y `/api/health` siguió en `ok`. Solo falta el visto
-  bueno para mergear. Para la próxima migración, lo mismo:
+```bash
+php back/sql/migrar.php --estado   # informa, no toca nada (ni crea schema_migrations)
+php back/sql/migrar.php            # aplica lo pendiente
+```
 
-  ```bash
-  php back/sql/migrar.php --estado   # informa, no toca nada (ni crea schema_migrations)
-  php back/sql/migrar.php            # registra 0001-0003 y aplica 0004 y 0005, sin cambios
-  ```
+Con las credenciales de la base (`DB_SSL=true` y `DB_SSL_CA`), desde la máquina
+de alguien del equipo. Detalle en `OPERACION.md` §7.
 
-  Con las credenciales de la base (`DB_SSL=true` y `DB_SSL_CA`), desde la máquina
-  de alguien del equipo. Es la primera prueba contra MySQL 8.4: el CI usa MariaDB.
-- **Dependabot:** ninguno abierto al 2026-11-06. Antes de mergear uno nuevo, la
-  trampa 20.
+**Triaje de Dependabot (sesión en la nube, 2026-11-14).** Ninguno se mergeó:
+todos esperan el visto bueno de Alex. La trampa 20 se revisó: los paquetes de
+los tres en verde se usan de verdad.
+
+| PR | Qué sube | CI | Recomendación |
+|---|---|---|---|
+| #100 | `phpstan` 2.3.4 → 2.3.5 | Verde | Mergear |
+| #102 | Menores del front: `lucide-react` 1.70, `tailwindcss` y `@tailwindcss/vite`, `vite` | Verde | Mergear |
+| #103 | `@vitejs/plugin-react` 5.2 → 6.2.1 (mayor) | Verde | Mergear después del #102, mirando el login en la preview de Vercel |
+| #101 | `phpunit` 11.5 → 13.4.6 | Rojo: "lock file does not contain a compatible set of packages" | **Cerrar.** PHPUnit 13 pide PHP ≥ 8.4.1, y el CI y `back/Dockerfile` usan PHP 8.3. PHPUnit 12 sí anda con 8.3. Subir a PHP 8.4 es una decisión aparte (imagen de Render, freno de A-18) |
+| #104 | `react-dom` 18 → 19 | Rojo: Playwright, `TimeoutError` | **Cerrar.** Dependabot separó React en dos PR, y `react-dom` 19 con `react` 18 no arranca |
+| #106 | `react` 18 → 19 | Rojo: Playwright, `TimeoutError` | **Cerrar**, por lo mismo que el #104 |
+| #105 | `react-router` 7.18 → 8.5.1 | Rojo: Playwright, `TimeoutError` | **Cerrar.** React Router 8 pide `react` y `react-dom` ≥ 19.2.7 |
+
+**Pasar a React 19 es una tarea, no un PR de Dependabot:** `react`, `react-dom`,
+`@types/react`, `@types/react-dom` y `react-is` (par de recharts) juntos,
+y recién después `react-router` 8. Hay que probar shadcn/Radix y recharts con
+las cinco suites de Playwright. Para que Dependabot no los vuelva a abrir por
+separado, conviene agruparlos en `.github/dependabot.yml` o ignorar las mayores
+hasta hacer la migración; tocar `dependabot.yml` también pide a Alex.
 
 ### El informe de testing del Grupo 9
 
