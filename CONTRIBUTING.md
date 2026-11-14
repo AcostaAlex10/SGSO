@@ -30,6 +30,7 @@ rama sin entrada es una rama que nadie va a saber para qué estaba.
 
 | Rama | Desde | Para qué | PR |
 |---|---|---|---|
+| `claude/plugin-react-6` | `main` @ `da05c07` (2026-11-14) | `@vitejs/plugin-react` 5.2.0 → 6.2.1; reemplaza al #103 de Dependabot, que quedó en conflicto | #109 |
 | `claude/b03-migraciones-versionadas` | `main` @ `eca5e8a` (2026-11-06), con `main` @ `235a630` integrado | B-03: migraciones versionadas con `schema_migrations`; rehace el #23 | #99 |
 
 ### Reglas
