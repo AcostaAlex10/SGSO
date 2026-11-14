@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { flushSync } from "react-dom";
 import { useParams, useNavigate } from "react-router";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
@@ -74,8 +75,9 @@ export default function ProyectoDetallePage() {
   const [avances, setAvances] = useState<Avance[]>([]);
   const [resumen, setResumen] = useState<Resumen | null>(null);
   const [loading, setLoading] = useState(true);
-  // Resumen que se está imprimiendo (RF37). Mientras vale, la vista de impresión está en el DOM.
-  const [imprimiendo, setImprimiendo] = useState<TipoResumen | null>(null);
+  // Último resumen elegido para imprimir (RF37). La vista de impresión está siempre montada
+  // (oculta en pantalla), así Ctrl+P también imprime el resumen de avance y no una hoja en blanco.
+  const [tipoImpresion, setTipoImpresion] = useState<TipoResumen>("avance");
 
   const [formAvance, setFormAvance] = useState({ cantidad_ejecutada: "", porcentaje_avance: "", fecha: hoy(), observaciones: "" });
 
@@ -478,19 +480,16 @@ export default function ProyectoDetallePage() {
     }
   }
 
-  // RF37: el PDF es la impresión del navegador sobre la vista limpia.
-  useEffect(() => {
-    if (!imprimiendo) return;
-    const terminar = () => setImprimiendo(null);
-    window.addEventListener("afterprint", terminar);
+  // RF37: el PDF es la impresión del navegador sobre la vista limpia. flushSync deja el
+  // DOM con el tipo elegido antes de imprimir, y no depende de que el estado cambie.
+  function imprimir(tipo: TipoResumen) {
     try {
+      flushSync(() => setTipoImpresion(tipo));
       window.print();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "No se pudo preparar la impresión");
-      setImprimiendo(null);
     }
-    return () => window.removeEventListener("afterprint", terminar);
-  }, [imprimiendo]);
+  }
 
   // El período que mantiene pausada la obra, si hay uno. Alimenta el aviso de arriba.
   const periodoVigente = inactividades.find((p) => p.vigente) ?? null;
@@ -505,10 +504,8 @@ export default function ProyectoDetallePage() {
 
   return (
     <>
-    {imprimiendo && (
-      <ResumenImpresion tipo={imprimiendo} proyecto={proyecto} resumen={resumen} avances={avances}
-        materiales={materiales} etapas={etapas} verCostos={verCostos} />
-    )}
+    <ResumenImpresion tipo={tipoImpresion} proyecto={proyecto} resumen={resumen} avances={avances}
+      materiales={materiales} etapas={etapas} verCostos={verCostos} />
     <div className="space-y-6 print:hidden">
       <Button variant="outline" className="gap-2" onClick={() => navigate("/proyectos")}>
         <ArrowLeft className="w-4 h-4" /> Volver a proyectos
@@ -823,7 +820,7 @@ export default function ProyectoDetallePage() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between gap-2">
               <CardTitle>Historial de avances ({avances.length})</CardTitle>
-              <BotonesExportar onCsv={() => exportarCsv("avance")} onPdf={() => setImprimiendo("avance")} />
+              <BotonesExportar nombre="avance" onCsv={() => exportarCsv("avance")} onPdf={() => imprimir("avance")} />
             </CardHeader>
             <CardContent>
               {avances.length === 0 ? (
@@ -1002,7 +999,7 @@ export default function ProyectoDetallePage() {
               <CardTitle className="flex items-center gap-2"><Package className="w-5 h-5" /> Materiales</CardTitle>
               <CardDescription>Materiales asignados a la obra y consumo registrado. Se avisa si se excede lo asignado.</CardDescription>
             </div>
-            <BotonesExportar onCsv={() => exportarCsv("materiales")} onPdf={() => setImprimiendo("materiales")} />
+            <BotonesExportar nombre="materiales" onCsv={() => exportarCsv("materiales")} onPdf={() => imprimir("materiales")} />
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -1229,11 +1226,11 @@ export default function ProyectoDetallePage() {
   );
 }
 
-function BotonesExportar({ onCsv, onPdf }: { onCsv: () => void; onPdf: () => void }) {
+function BotonesExportar({ nombre, onCsv, onPdf }: { nombre: TipoResumen; onCsv: () => void; onPdf: () => void }) {
   return (
     <div className="flex gap-2 print:hidden">
-      <Button type="button" size="sm" variant="outline" className="gap-1" onClick={onCsv}><Download className="w-4 h-4" /> Exportar CSV</Button>
-      <Button type="button" size="sm" variant="outline" className="gap-1" onClick={onPdf}><Printer className="w-4 h-4" /> Exportar PDF</Button>
+      <Button type="button" size="sm" variant="outline" className="gap-1" aria-label={`Exportar ${nombre} en CSV`} onClick={onCsv}><Download className="w-4 h-4" /> Exportar CSV</Button>
+      <Button type="button" size="sm" variant="outline" className="gap-1" aria-label={`Imprimir o guardar en PDF el resumen de ${nombre === "avance" ? "avance" : "materiales"}`} onClick={onPdf}><Printer className="w-4 h-4" /> Exportar PDF</Button>
     </div>
   );
 }

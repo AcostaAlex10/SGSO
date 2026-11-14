@@ -42,7 +42,7 @@ export function celdaCsv(valor: Celda): string {
   } else {
     texto = valor;
     // Una celda que empieza así la interpreta Excel como fórmula (inyección).
-    if (/^[=+\-@\t\r]/.test(texto)) texto = "'" + texto;
+    if (/^[\s\u00A0]*[=+\-@\uFF1D\uFF0B\uFF0D\uFF20]/.test(texto) || /^[\t\r]/.test(texto)) texto = "'" + texto;
   }
   if (/[;"\r\n]/.test(texto)) texto = '"' + texto.replace(/"/g, '""') + '"';
   return texto;

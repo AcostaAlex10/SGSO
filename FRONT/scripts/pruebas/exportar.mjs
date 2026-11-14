@@ -20,7 +20,7 @@ igual('texto comun queda igual', celdaCsv('Hormigon H21'), 'Hormigon H21');
 igual('null y undefined quedan vacios', celdaCsv(null) + celdaCsv(undefined), '');
 
 // Anti formula
-for (const c of ['=1+1', '+1', '-1', '@SUMA(A1)', '\tx', '\rx']) {
+for (const c of ['=1+1', '+1', '-1', '@SUMA(A1)', '\tx', '\rx', ' =1+1', '\u00A0=1+1', '  @x', '＝1', '＋1', '－1', '＠x', ' ＝1']) {
   const r = celdaCsv(c);
   igual(`formula ${JSON.stringify(c)} se prefija con '`, r.replace(/^"/, '').startsWith("'"), true);
 }
