@@ -7,7 +7,7 @@ se perdió.** Una sesión nueva empieza leyendo esto.
 - **Actualizado:** 2026-11-14, desde la sesión en la nube: B-03 mergeado (#99) y triaje de Dependabot #100 a #106 (sección 3). El 2026-11-03 el producto volvió
   a llamarse **SGSO** (Sistema de Gestión y Seguimiento Operativo de obras,
   DEC-01); el repositorio de GitHub también se renombró a `SGSO`
-- **Base:** `main` @ `f39030d` (2026-11-06, #99). **La base de Aiven se volvió a apagar** y se
+- **Base:** `main` @ `e5fb34a` (2026-11-14, #109). **La base de Aiven se volvió a apagar** y se
   encendió el 2026-11-04 (riesgo R-01): `/api/health` responde
   `{"status":"ok","db":"ok"}`. **La URL de producción ahora es
   `https://sgsos.vercel.app`**; la anterior sigue conectada. **Brevo ya funciona**: Alex
@@ -113,7 +113,7 @@ Programador**. Para no pisarse:
 | Ítem | Sesión | Estado | Pendiente |
 |---|---|---|---|
 | B-03 (PR #99, migraciones versionadas) | Local | **Mergeado** el 2026-11-06 (`f39030d`); migraciones corridas en Aiven el 2026-11-07, sin cambios; el #23 se cerró | Decisión de Alex: si `migrar.php` se corre solo en el arranque de Render. Borrar la rama vieja `claude/migraciones-versionadas` (pide a Alex) |
-| Triaje de Dependabot #100 a #106 | Nube | Hecho el 2026-11-14: #100 y #102 mergeados; #101, #103, #104, #105 y #106 cerrados | Mergear el #109 (reemplaza al #103) |
+| Triaje de Dependabot #100 a #106 | Nube | Hecho el 2026-11-14: #100 y #102 mergeados; #101, #103, #104, #105 y #106 cerrados | — |
 
 **Estado del repositorio al 2026-11-06** (revisado con `gh` y `origin/main`):
 `main` @ `eca5e8a` con CI en verde en los últimos cinco pushes. El único PR
@@ -176,8 +176,8 @@ Riesgo R-10 de `OPERACION.md` §8.
 
 ### PR abiertos
 
-Al 2026-11-14 están abiertos el #107 (este traspaso), el #108 (D-06) y el #109
-(`@vitejs/plugin-react` 6.2.1, que reemplaza al #103). Los siete de Dependabot del
+Al 2026-11-14 están abiertos el #107 (este traspaso) y el #108 (D-06). El #109
+(`@vitejs/plugin-react` 6.2.1, que reemplaza al #103) se mergeó. Los siete de Dependabot del
 2026-11-09 ya se resolvieron (tabla de abajo). El #99 (B-03) se mergeó el 2026-11-06 y el #23 se cerró sin
 mergear. Para la próxima migración, lo mismo que con B-03:
 
@@ -197,7 +197,7 @@ revisó: los paquetes de los tres en verde se usan de verdad.
 |---|---|---|---|
 | #100 | `phpstan` 2.3.4 → 2.3.5 | Verde | **Mergeado** |
 | #102 | Menores del front: `lucide-react` 1.70, `tailwindcss` y `@tailwindcss/vite`, `vite` | Verde | **Mergeado** |
-| #103 | `@vitejs/plugin-react` 5.2 → 6.2.1 (mayor) | Verde | **Cerrado**: después del #102 quedó en conflicto en `package-lock.json`. Lo reemplaza el #109 |
+| #103 | `@vitejs/plugin-react` 5.2 → 6.2.1 (mayor) | Verde | **Cerrado**: después del #102 quedó en conflicto en `package-lock.json`. Lo reemplazó el #109, mergeado |
 | #101 | `phpunit` 11.5 → 13.4.6 | Rojo: "lock file does not contain a compatible set of packages" | **Cerrado.** PHPUnit 13 pide PHP ≥ 8.4.1, y el CI y `back/Dockerfile` usan PHP 8.3. PHPUnit 12 sí anda con 8.3. Subir a PHP 8.4 es una decisión aparte (imagen de Render, freno de A-18) |
 | #104 | `react-dom` 18 → 19 | Rojo: Playwright, `TimeoutError` | **Cerrado.** Dependabot separó React en dos PR, y `react-dom` 19 con `react` 18 no arranca |
 | #106 | `react` 18 → 19 | Rojo: Playwright, `TimeoutError` | **Cerrado**, por lo mismo que el #104 |
