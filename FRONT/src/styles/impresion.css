@@ -1,0 +1,15 @@
+/* Impresión (RF37): el tema es oscuro, el papel no. La app oculta su marco con
+   `print:hidden`; acá queda el fondo claro y el aviso del toast. */
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    color: #111 !important;
+  }
+  [data-sonner-toaster] {
+    display: none !important;
+  }
+  @page {
+    margin: 14mm;
+  }
+}

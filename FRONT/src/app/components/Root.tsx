@@ -115,13 +115,13 @@ export default function Root() {
   const currentPage = navItems.find(n => isActive(n.path))?.label ?? "Dashboard";
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ background: "var(--background)" }}>
-      <Toaster position="top-right" theme="dark" />
+    <div className="flex h-screen overflow-hidden print:block print:h-auto print:overflow-visible" style={{ background: "var(--background)" }}>
+      <div className="print:hidden"><Toaster position="top-right" theme="dark" /></div>
 
       {/* Sidebar */}
       <aside
         className={`
-          fixed inset-y-0 left-0 z-50 flex flex-col transition-transform duration-200
+          fixed inset-y-0 left-0 z-50 flex flex-col transition-transform duration-200 print:hidden
           lg:relative lg:translate-x-0
           ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
         `}
@@ -289,17 +289,17 @@ export default function Root() {
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 lg:hidden"
+          className="fixed inset-0 z-40 lg:hidden print:hidden"
           style={{ background: "rgba(0,0,0,0.7)" }}
           onClick={() => setMobileOpen(false)}
         />
       )}
 
       {/* Main area */}
-      <div className="flex flex-col flex-1 overflow-hidden">
+      <div className="flex flex-col flex-1 overflow-hidden print:block print:overflow-visible">
         {/* Top bar */}
         <header
-          className="flex items-center justify-between flex-shrink-0"
+          className="flex items-center justify-between flex-shrink-0 print:hidden"
           style={{
             height: "48px",
             padding: "0 24px",
@@ -352,7 +352,7 @@ export default function Root() {
 
         {/* Content */}
         <main
-          className="flex-1 overflow-y-auto"
+          className="flex-1 overflow-y-auto print:overflow-visible print:!p-0 print:!bg-white"
           style={{ padding: "24px", background: "var(--background)" }}
         >
           <Outlet />

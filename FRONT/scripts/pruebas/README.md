@@ -13,6 +13,12 @@ están en `back/tests/`, y todo corre en el CI en cada pull request.
 | `persistencia.mjs` | la copia en `localStorage` y su invalidación al cambiar `datos.json` |
 | `contrato.mjs` | reglas que no tienen botón: borrar un reporte ya enviado, rechazar sin motivo, mandar un estado vacío, cargar avance en una obra cancelada; la paginación de los listados (C-03), con su "Ver más" en pantalla; la alerta de consumo de maquinaria en Alertas (D-03), con el consumo esperado por máquina y la ventana de 30 días (D-13); a cuántos avisa una incidencia según su gravedad (D-02); que una obra nueva arranque `creada` (D-04); y el monto certificado que calcula la API (D-09) |
 
+`exportar.mjs` (RF37) es la excepción: no usa navegador ni servidor, importa
+`src/app/exportar.ts` y comprueba el generador de CSV (escape, BOM, `;`,
+anti fórmula, decimales con coma, fecha de Buenos Aires). Se corre con
+`node scripts/pruebas/exportar.mjs` (Node 22.18 o más). **No está en el CI
+todavía**: falta una línea en `.github/workflows/ci.yml`.
+
 `contrato.mjs` es distinto de los otros cuatro: en vez de manejar la pantalla,
 le habla al simulador directo por `window.sgsoMockFetch`, la costura que expone
 `src/app/mock/servidor.ts`. Existe porque esas cuatro reglas viven en la capa de
