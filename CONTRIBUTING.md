@@ -30,7 +30,7 @@ rama sin entrada es una rama que nadie va a saber para qué estaba.
 
 | Rama | Desde | Para qué | PR |
 |---|---|---|---|
-| `claude/traspaso-dependabot` | `main` @ `f39030d` (2026-11-14) | `TRASPASO.md` al día con el merge del #99 y el triaje de Dependabot #100 a #106 | #107 |
+| — | — | Ninguna abierta al 2026-11-14 | — |
 
 ### Reglas
 
@@ -189,6 +189,8 @@ El trabajo sigue en `main`; los PR explican por qué el código quedó como qued
 | `claude/migraciones-versionadas` | B-03, primera versión; quedó atrás de `main` y apagaba la verificación TLS de la base | Cerrado sin mergear; lo rehizo el PR #99 |
 | `claude/b03-migraciones-versionadas` | B-03: migraciones versionadas con `schema_migrations`; rehace el #23 | PR #99 |
 | `claude/plugin-react-6` | `@vitejs/plugin-react` 5.2.0 → 6.2.1; reemplazó al #103 de Dependabot | PR #109 |
+| `claude/traspaso-dependabot` | `TRASPASO.md` al día con el merge del #99 y el triaje de Dependabot #100 a #106 | PR #107 |
+| `claude/d06-resumenes` | D-06 (RF37): exportar los resúmenes de avance y materiales de una obra en CSV y PDF por impresión | PR #108 |
 
 ### Dos cosas que no conviene repetir
 
