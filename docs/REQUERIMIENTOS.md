@@ -264,7 +264,7 @@ se midió o se probó. La columna **Estado** dice dónde está cada una hoy.
 
 | RNF | El sistema debe… | Prioridad | Estado hoy |
 |---|---|---|---|
-| RNF01 | poder usarse desde celulares y computadoras con una interfaz responsive | Crítica | **Sin verificar.** La interfaz usa diseño adaptable, pero nadie la revisó pantalla por pantalla en un celular (plan: D-07). |
+| RNF01 | poder usarse desde celulares y computadoras con una interfaz responsive | Crítica | **Parcial.** Un guion automático (`FRONT/scripts/pruebas/movil.mjs`) recorre cada pantalla por rol en 360x640 y 390x844, y los diálogos en 640x360: sin scroll horizontal de la página, tablas anchas con scroll dentro de su tarjeta, diálogos largos recorribles y botones de menú y cerrar sesión de 44 px. Falta probarlo en un teléfono real y decidir con Alex el tamaño de los demás botones (muchos miden menos de 44 px), el texto chico del sidebar y los textos de marca (D-07). |
 | RNF02 | permitir completar el registro diario de avance en menos de 10 minutos sin ayuda | Crítica | **Sin verificar.** Nunca se midió con un usuario real. |
 | RNF03 | responder las consultas principales en menos de 5 segundos en el 90 % de los casos | Crítica | **No se cumple.** En el plan gratuito, Render suspende la API y la primera consulta puede tardar cerca de un minuto (plan: B-01). |
 | RNF04 | permitir el acceso en tiempo real desde distintas ubicaciones con internet | Importante | Cumple. Es una aplicación web publicada. |

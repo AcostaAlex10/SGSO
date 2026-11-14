@@ -115,7 +115,7 @@ export default function Root() {
   const currentPage = navItems.find(n => isActive(n.path))?.label ?? "Dashboard";
 
   return (
-    <div className="flex h-screen overflow-hidden print:block print:h-auto print:overflow-visible" style={{ background: "var(--background)" }}>
+    <div className="flex h-dvh overflow-hidden print:block print:h-auto print:overflow-visible" style={{ background: "var(--background)" }}>
       <div className="print:hidden"><Toaster position="top-right" theme="dark" /></div>
 
       {/* Sidebar */}
@@ -261,7 +261,8 @@ export default function Root() {
             <button
               onClick={handleLogout}
               title="Cerrar sesion"
-              className="ml-auto flex items-center"
+              aria-label="Cerrar sesión"
+              className="ml-auto flex items-center justify-center min-h-[44px] min-w-[44px] -my-2 -mr-2"
               style={{ color: "var(--muted-foreground)", background: "transparent", border: "none", cursor: "pointer", padding: "4px" }}
             >
               <LogOut style={{ width: "14px", height: "14px" }} />
@@ -299,18 +300,18 @@ export default function Root() {
       <div className="flex flex-col flex-1 overflow-hidden print:block print:overflow-visible">
         {/* Top bar */}
         <header
-          className="flex items-center justify-between flex-shrink-0 print:hidden"
+          className="flex items-center justify-between gap-2 flex-shrink-0 px-3 sm:px-6 print:hidden"
           style={{
             height: "48px",
-            padding: "0 24px",
             background: "var(--card)",
             borderBottom: "1px solid var(--border)",
           }}
         >
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1 sm:gap-3 min-w-0">
             {/* Mobile menu */}
             <button
-              className="lg:hidden"
+              className="lg:hidden flex items-center justify-center min-h-[44px] min-w-[44px] -ml-3"
+              aria-label="Abrir menú"
               style={{ color: "var(--muted-foreground)", padding: "4px" }}
               onClick={() => setMobileOpen(true)}
             >
@@ -321,14 +322,14 @@ export default function Root() {
               </svg>
             </button>
             {/* Breadcrumb */}
-            <div className="flex items-center gap-2" style={{ fontSize: "12px", color: "var(--muted-foreground)" }}>
-              <span style={{ letterSpacing: "0.03em" }}>SGSO</span>
-              <span style={{ color: "var(--border)" }}>/</span>
-              <span style={{ color: "var(--foreground)", fontWeight: 600 }}>{currentPage}</span>
+            <div className="flex items-center gap-2 min-w-0" style={{ fontSize: "12px", color: "var(--muted-foreground)" }}>
+              <span className="hidden sm:inline" style={{ letterSpacing: "0.03em" }}>SGSO</span>
+              <span className="hidden sm:inline" style={{ color: "var(--border)" }}>/</span>
+              <span className="truncate" style={{ color: "var(--foreground)", fontWeight: 600 }}>{currentPage}</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-shrink-0">
             <div
               className="flex items-center gap-2"
               style={{
@@ -344,7 +345,7 @@ export default function Root() {
               <span style={{ color: "#22c55e" }}>●</span>
               <span>SGSO</span>
             </div>
-            <div style={{ fontSize: "11px", color: "var(--muted-foreground)" }}>
+            <div className="hidden sm:block" style={{ fontSize: "11px", color: "var(--muted-foreground)" }}>
               {new Date().toLocaleDateString("es-AR", { weekday: "short", day: "numeric", month: "short", year: "numeric" })}
             </div>
           </div>

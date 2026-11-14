@@ -1,6 +1,6 @@
 # Pruebas del modo estático
 
-Cinco guiones que manejan un navegador real contra el build estático y verifican
+Cinco guiones (más `movil.mjs`, abajo) que manejan un navegador real contra el build estático y verifican
 lo que más se rompe. Cubren de punta a punta el frontend y el simulador, que es
 donde vive la mayor parte del comportamiento por rol. Las pruebas del backend
 están en `back/tests/`, y todo corre en el CI en cada pull request.
@@ -18,6 +18,21 @@ están en `back/tests/`, y todo corre en el CI en cada pull request.
 anti fórmula, decimales con coma, fecha de Buenos Aires). Se corre con
 `node scripts/pruebas/exportar.mjs` (Node 22.18 o más). **No está en el CI
 todavía**: falta una línea en `.github/workflows/ci.yml`.
+
+`movil.mjs` (RNF01, D-07) mide el uso desde el celular contra el mismo build estático
+y el mismo servidor: cada pantalla por rol (técnico, gerente, administrativo, admin y las
+rutas públicas, más el detalle de una obra y una ruta inexistente) en 360x640 y 390x844
+con `isMobile` y `hasTouch`, y los diálogos de crear obra y nuevo reporte también en
+640x360. **Falla** (salida 1) si hay scroll horizontal de la página o de `main`,
+elementos fuera del viewport que no estén dentro de un contenedor con scroll horizontal,
+diálogos que no se pueden recorrer o con botones de acción fuera de pantalla, o botones de
+menú y cerrar sesión menores a 44x44. **Solo informa** (no falla) cuántos objetivos
+táctiles miden menos de 44 y de 24 px por pantalla, cuántos textos son menores a 12 px y
+los inputs numéricos sin `inputMode`. Guarda capturas en `SGSO_CAPTURAS` (por defecto
+`$TMPDIR/sgso-movil`, fuera del repo). Si el Chromium instalado no coincide con la versión
+de Playwright, `SGSO_CHROMIUM=/ruta/a/chrome` fija el ejecutable. **No está en el CI
+todavía**: cablearlo toca `.github/workflows/ci.yml` y lo decide Alex. Correr con
+`node scripts/pruebas/movil.mjs`.
 
 `contrato.mjs` es distinto de los otros cuatro: en vez de manejar la pantalla,
 le habla al simulador directo por `window.sgsoMockFetch`, la costura que expone

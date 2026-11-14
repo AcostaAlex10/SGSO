@@ -304,8 +304,8 @@ export default function ProyectosPage() {
             <DialogDescription>Complete la información del proyecto. Todos los campos son obligatorios.</DialogDescription>
           </DialogHeader>
           <form onSubmit={guardar} noValidate className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2 col-span-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2 sm:col-span-2">
                 <Label htmlFor="nombre">Nombre del Proyecto *</Label>
                 <Input id="nombre" value={form.nombre} onChange={(e) => cambiar("nombre", e.target.value)} placeholder="Ej: Obra Vial Ruta 14" aria-required="true" aria-invalid={!!errores.nombre} />
                 <AvisoCampo mensaje={errores.nombre} />

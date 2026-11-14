@@ -33,7 +33,7 @@ function StatCard({ label, value, sub, icon: Icon, accent }: {
   label: string; value: string; sub: string; icon: typeof FolderKanban; accent: string;
 }) {
   return (
-    <div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "18px 20px", position: "relative", overflow: "hidden" }}>
+    <div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: "18px 20px", position: "relative", overflow: "hidden", minWidth: 0 }}>
       <div style={{ position: "absolute", top: 0, left: 0, width: "3px", height: "100%", background: accent, opacity: 0.7 }} />
       <div className="flex items-start justify-between">
         <div>
@@ -103,7 +103,7 @@ export default function Dashboard() {
       </div>
 
       {/* KPIs reales */}
-      <div className={`grid grid-cols-2 ${verCostos ? "lg:grid-cols-4" : "lg:grid-cols-3"} gap-4`}>
+      <div className={`grid grid-cols-1 sm:grid-cols-2 ${verCostos ? "lg:grid-cols-4" : "lg:grid-cols-3"} gap-4`}>
         <StatCard label="Proyectos" value={String(total)} sub="obras registradas" icon={FolderKanban} accent="#3b82f6" />
         <StatCard label="En Ejecución" value={String(enEjecucion)} sub="obras activas" icon={Activity} accent="#22c55e" />
         <StatCard label="Avance Promedio" value={`${avancePromedio}%`} sub="de las obras" icon={TrendingUp} accent="#e8981e" />
@@ -128,6 +128,9 @@ export default function Dashboard() {
           <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--foreground)" }}>Estado de Obras</span>
           <Link to="/proyectos" style={{ fontSize: "11px", color: "var(--primary)", fontWeight: 600 }}>Ver todos →</Link>
         </div>
+        {/* Tabla ancha: scroll horizontal dentro de la tarjeta (RNF01), no de la pagina */}
+        <div className="overflow-x-auto">
+        <div style={{ minWidth: verCostos ? "580px" : "440px" }}>
         <div className="grid" style={{ gridTemplateColumns: verCostos ? "1fr 140px 130px 120px" : "1fr 160px 160px", padding: "8px 18px", borderBottom: "1px solid var(--border)", background: "var(--secondary)" }}>
           {(verCostos ? ["Proyecto", "Estado", "Avance", "Presupuesto"] : ["Proyecto", "Estado", "Avance"]).map((h, i) => (
             <span key={i} style={{ fontSize: "10px", fontWeight: 600, color: "var(--muted-foreground)", letterSpacing: "0.07em", textTransform: "uppercase" }}>{h}</span>
@@ -154,6 +157,8 @@ export default function Dashboard() {
             </Link>
           );
         })}
+        </div>
+        </div>
       </div>
 
       {/* Modulos (navegacion) */}

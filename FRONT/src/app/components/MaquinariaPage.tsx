@@ -295,8 +295,8 @@ export default function MaquinariaPage() {
             <div className="space-y-3">
               <h4 className="font-semibold">Registro de uso</h4>
               {carga && (
-                <form onSubmit={guardarReg} className="grid grid-cols-2 md:grid-cols-6 gap-2 items-end">
-                  <div className="space-y-1 col-span-2 md:col-span-6"><Label>Obra (opcional)</Label>
+                <form onSubmit={guardarReg} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-2 items-end">
+                  <div className="space-y-1 sm:col-span-2 md:col-span-6"><Label>Obra (opcional)</Label>
                     <Select value={formReg.id_proyecto} onValueChange={(v) => setFormReg({ ...formReg, id_proyecto: v })}>
                       <SelectTrigger><SelectValue placeholder="Vincular este uso a una obra (opcional)" /></SelectTrigger>
                       <SelectContent>
@@ -370,7 +370,8 @@ export default function MaquinariaPage() {
         </CardHeader>
         <CardContent>
           {operarios.length === 0 ? <p className="text-muted-foreground text-sm">Todavía no hay datos de operarios.</p> : (
-            <div className="space-y-1">
+            <div className="overflow-x-auto">
+            <div className="space-y-1 min-w-[520px]">
               <div className="grid text-xs text-muted-foreground uppercase" style={{ gridTemplateColumns: "1fr 110px 130px 130px" }}>
                 <span>Operario</span><span>Horas</span><span>Producción</span><span>Prod./hora</span>
               </div>
@@ -382,6 +383,7 @@ export default function MaquinariaPage() {
                   <span style={{ fontWeight: 600 }}>{o.produccion_por_hora}</span>
                 </div>
               ))}
+            </div>
             </div>
           )}
         </CardContent>
