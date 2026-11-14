@@ -4,10 +4,10 @@ Este archivo existe porque las sesiones locales de Claude Code se pierden con
 cada corte de luz o reinicio brusco. **Lo que no está acá ni en el repositorio,
 se perdió.** Una sesión nueva empieza leyendo esto.
 
-- **Actualizado:** 2026-11-07, con B-03 en el PR #99 (sección 3). El 2026-11-03 el producto volvió
+- **Actualizado:** 2026-11-14, desde la sesión en la nube: B-03 mergeado (#99) y triaje de Dependabot #100 a #106 (sección 3). El 2026-11-03 el producto volvió
   a llamarse **SGSO** (Sistema de Gestión y Seguimiento Operativo de obras,
   DEC-01); el repositorio de GitHub también se renombró a `SGSO`
-- **Base:** `main` @ `235a630` (2026-11-07, #98; CI en verde). **La base de Aiven se volvió a apagar** y se
+- **Base:** `main` @ `e5fb34a` (2026-11-14, #109). **La base de Aiven se volvió a apagar** y se
   encendió el 2026-11-04 (riesgo R-01): `/api/health` responde
   `{"status":"ok","db":"ok"}`. **La URL de producción ahora es
   `https://sgsos.vercel.app`**; la anterior sigue conectada. **Brevo ya funciona**: Alex
@@ -112,7 +112,8 @@ Programador**. Para no pisarse:
 
 | Ítem | Sesión | Estado | Pendiente |
 |---|---|---|---|
-| B-03 (PR #99, migraciones versionadas) | Local | Hecho en el #99; migraciones corridas en Aiven el 2026-11-07, sin cambios; el #23 se cerró | El visto bueno de Alex para mergear. Decidir si se automatiza en el arranque de Render |
+| B-03 (PR #99, migraciones versionadas) | Local | **Mergeado** el 2026-11-06 (`f39030d`); migraciones corridas en Aiven el 2026-11-07, sin cambios; el #23 se cerró | Decisión de Alex: si `migrar.php` se corre solo en el arranque de Render. Borrar la rama vieja `claude/migraciones-versionadas` (pide a Alex) |
+| Triaje de Dependabot #100 a #106 | Nube | Hecho el 2026-11-14: #100 y #102 mergeados; #101, #103, #104, #105 y #106 cerrados | — |
 
 **Estado del repositorio al 2026-11-06** (revisado con `gh` y `origin/main`):
 `main` @ `eca5e8a` con CI en verde en los últimos cinco pushes. El único PR
@@ -175,24 +176,39 @@ Riesgo R-10 de `OPERACION.md` §8.
 
 ### PR abiertos
 
-Al 2026-11-07 **el único PR abierto es el #99**. El #23 se cerró sin mergear:
-quedó atrás de `main` y apagaba la verificación TLS de la base (A-19).
+Al 2026-11-14 están abiertos el #107 (este traspaso) y el #108 (D-06). El #109
+(`@vitejs/plugin-react` 6.2.1, que reemplaza al #103) se mergeó. Los siete de Dependabot del
+2026-11-09 ya se resolvieron (tabla de abajo). El #99 (B-03) se mergeó el 2026-11-06 y el #23 se cerró sin
+mergear. Para la próxima migración, lo mismo que con B-03:
 
-- **#99 (B-03, migraciones versionadas).** Rehace el #23 sobre `main`, con dos
-  revisiones de un agente distinto. **Las migraciones ya se corrieron en Aiven**
-  (Alex, 2026-11-07): `0001` a `0003` quedaron registradas sin ejecutarse, `0004`
-  y `0005` no cambiaron nada, y `/api/health` siguió en `ok`. Solo falta el visto
-  bueno para mergear. Para la próxima migración, lo mismo:
+```bash
+php back/sql/migrar.php --estado   # informa, no toca nada (ni crea schema_migrations)
+php back/sql/migrar.php            # aplica lo pendiente
+```
 
-  ```bash
-  php back/sql/migrar.php --estado   # informa, no toca nada (ni crea schema_migrations)
-  php back/sql/migrar.php            # registra 0001-0003 y aplica 0004 y 0005, sin cambios
-  ```
+Con las credenciales de la base (`DB_SSL=true` y `DB_SSL_CA`), desde la máquina
+de alguien del equipo. Detalle en `OPERACION.md` §7.
 
-  Con las credenciales de la base (`DB_SSL=true` y `DB_SSL_CA`), desde la máquina
-  de alguien del equipo. Es la primera prueba contra MySQL 8.4: el CI usa MariaDB.
-- **Dependabot:** ninguno abierto al 2026-11-06. Antes de mergear uno nuevo, la
-  trampa 20.
+**Triaje de Dependabot (sesión en la nube, 2026-11-14).** Alex dio el visto
+bueno: los rojos se cerraron y los verdes se mergearon de a uno. La trampa 20 se
+revisó: los paquetes de los tres en verde se usan de verdad.
+
+| PR | Qué sube | CI | Recomendación |
+|---|---|---|---|
+| #100 | `phpstan` 2.3.4 → 2.3.5 | Verde | **Mergeado** |
+| #102 | Menores del front: `lucide-react` 1.70, `tailwindcss` y `@tailwindcss/vite`, `vite` | Verde | **Mergeado** |
+| #103 | `@vitejs/plugin-react` 5.2 → 6.2.1 (mayor) | Verde | **Cerrado**: después del #102 quedó en conflicto en `package-lock.json`. Lo reemplazó el #109, mergeado |
+| #101 | `phpunit` 11.5 → 13.4.6 | Rojo: "lock file does not contain a compatible set of packages" | **Cerrado.** PHPUnit 13 pide PHP ≥ 8.4.1, y el CI y `back/Dockerfile` usan PHP 8.3. PHPUnit 12 sí anda con 8.3. Subir a PHP 8.4 es una decisión aparte (imagen de Render, freno de A-18) |
+| #104 | `react-dom` 18 → 19 | Rojo: Playwright, `TimeoutError` | **Cerrado.** Dependabot separó React en dos PR, y `react-dom` 19 con `react` 18 no arranca |
+| #106 | `react` 18 → 19 | Rojo: Playwright, `TimeoutError` | **Cerrado**, por lo mismo que el #104 |
+| #105 | `react-router` 7.18 → 8.5.1 | Rojo: Playwright, `TimeoutError` | **Cerrado.** React Router 8 pide `react` y `react-dom` ≥ 19.2.7 |
+
+**Pasar a React 19 es una tarea, no un PR de Dependabot:** `react`, `react-dom`,
+`@types/react`, `@types/react-dom` y `react-is` (par de recharts) juntos,
+y recién después `react-router` 8. Hay que probar shadcn/Radix y recharts con
+las cinco suites de Playwright. Para que Dependabot no los vuelva a abrir por
+separado, conviene agruparlos en `.github/dependabot.yml` o ignorar las mayores
+hasta hacer la migración; tocar `dependabot.yml` también pide a Alex.
 
 ### El informe de testing del Grupo 9
 
@@ -505,6 +521,19 @@ Cada una de estas hizo perder al menos media hora. Están acá para no repetirla
     a D-24 al integrar `main`. Lo mismo vale para los RF, los DEC y estas
     trampas. Antes de mergear, `git grep` del número contra
     `origin/main`; el que llega segundo se renumera.
+42. **Claude no puede darle órdenes a Dependabot.** El filtro de GitHub le mete
+    `·` a un `@dependabot rebase` o `recreate` escrito por Claude, y Dependabot
+    no lo ve (2026-11-14, #102). Para poner al día un PR de Dependabot atrasado
+    se usa `gh api -X PUT repos/AcostaAlex10/SGSO/pulls/<n>/update-branch`, y se
+    mergea con squash para que no entren commits ajenos. Si queda en conflicto
+    (el `package-lock.json` de dos PR del front), o Alex comenta `@dependabot
+    recreate` o se cierra y se abre un PR propio con la misma subida (#109).
+43. **En la nube, el clon superficial solo sigue a `main`.** El `git clone
+    --depth 1` deja `remote.origin.fetch` apuntando solo a `main`, así que una
+    rama pusheada con `-u` no tiene rama remota de seguimiento y el hook de
+    cierre dice que hay commits sin pushear aunque estén en GitHub. Se arregla
+    con `git config --add remote.origin.fetch
+    '+refs/heads/<rama>:refs/remotes/origin/<rama>'` y `git fetch origin`.
 
 ### Si la sesión corre en la nube y no en tu máquina
 
@@ -520,8 +549,8 @@ cargar Google Fonts detrás del proxy del entorno. **No es una regresión.** En 
 CI de GitHub da 28/28.
 
 **Las trampas 9, 10, 11, 13, 17, 21, 33, 35, 36, 37 y 38 son de la máquina local** (Windows,
-antivirus, `back/.env`): en la nube no aplican. La 12, la 14, la 19, la 31, la 34, la 39 y la 41 valen para las dos, y de la 22 a
-la 28 y la 40 son propias de la nube. En la nube tampoco hay `back/.env`, así que
+antivirus, `back/.env`): en la nube no aplican. La 12, la 14, la 19, la 31, la 34, la 39, la 41 y la 42 valen para las dos, y de la 22 a
+la 28, la 40 y la 43 son propias de la nube. En la nube tampoco hay `back/.env`, así que
 no hay forma de pegarle a producción por accidente, y así tiene que seguir.
 
 ---
