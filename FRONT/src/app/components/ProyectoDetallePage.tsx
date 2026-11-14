@@ -572,8 +572,8 @@ export default function ProyectoDetallePage() {
       {/* Datos de la obra */}
       <Card>
         <CardHeader>
-          <div className="flex items-start justify-between">
-            <div>
+          <div className="flex flex-wrap items-start justify-between gap-2">
+            <div className="min-w-0">
               <CardTitle className="text-2xl">{proyecto.nombre}</CardTitle>
               <CardDescription className="mt-1">{proyecto.tipo}</CardDescription>
             </div>
@@ -818,7 +818,7 @@ export default function ProyectoDetallePage() {
 
           {/* Historial de avances */}
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between gap-2">
+            <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-2">
               <CardTitle>Historial de avances ({avances.length})</CardTitle>
               <BotonesExportar nombre="avance" onCsv={() => exportarCsv("avance")} onPdf={() => imprimir("avance")} />
             </CardHeader>
@@ -994,8 +994,8 @@ export default function ProyectoDetallePage() {
       {/* Materiales (RF10/RF12) */}
       <Card>
         <CardHeader>
-          <div className="flex items-start justify-between gap-2">
-            <div>
+          <div className="flex flex-wrap items-start justify-between gap-2">
+            <div className="min-w-0">
               <CardTitle className="flex items-center gap-2"><Package className="w-5 h-5" /> Materiales</CardTitle>
               <CardDescription>Materiales asignados a la obra y consumo registrado. Se avisa si se excede lo asignado.</CardDescription>
             </div>
@@ -1228,7 +1228,7 @@ export default function ProyectoDetallePage() {
 
 function BotonesExportar({ nombre, onCsv, onPdf }: { nombre: TipoResumen; onCsv: () => void; onPdf: () => void }) {
   return (
-    <div className="flex gap-2 print:hidden">
+    <div className="flex flex-wrap gap-2 print:hidden">
       <Button type="button" size="sm" variant="outline" className="gap-1" aria-label={`Exportar ${nombre} en CSV`} onClick={onCsv}><Download className="w-4 h-4" /> Exportar CSV</Button>
       <Button type="button" size="sm" variant="outline" className="gap-1" aria-label={`Imprimir o guardar en PDF el resumen de ${nombre === "avance" ? "avance" : "materiales"}`} onClick={onPdf}><Printer className="w-4 h-4" /> Exportar PDF</Button>
     </div>

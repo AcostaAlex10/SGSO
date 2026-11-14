@@ -30,7 +30,7 @@ rama sin entrada es una rama que nadie va a saber para qué estaba.
 
 | Rama | Desde | Para qué | PR |
 |---|---|---|---|
-| — | — | Ninguna abierta al 2026-11-14 | — |
+| `claude/d07-celular` | `main` @ `f4caa10` (2026-11-14) | D-07 parte 1 (RNF01): guion `movil.mjs` y arreglos de desborde, toque y diálogos en el celular | #110 |
 
 ### Reglas
 

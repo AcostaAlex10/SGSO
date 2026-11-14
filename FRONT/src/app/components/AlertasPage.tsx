@@ -72,7 +72,8 @@ export default function AlertasPage() {
           {conPlan.length === 0 ? (
             <p className="text-muted-foreground text-sm">No hay obras con planificación para comparar.</p>
           ) : (
-            <div className="space-y-2">
+            <div className="overflow-x-auto">
+            <div className="space-y-2 min-w-[480px]">
               <div className="grid text-xs text-muted-foreground uppercase" style={{ gridTemplateColumns: "1fr 110px 110px 110px" }}>
                 <span>Obra</span><span>Esperado</span><span>Real</span><span>Desvío</span>
               </div>
@@ -86,6 +87,7 @@ export default function AlertasPage() {
                   </span>
                 </div>
               ))}
+            </div>
             </div>
           )}
         </CardContent>
@@ -105,7 +107,8 @@ export default function AlertasPage() {
               const mostrarBase = data.proyectos.some((p) => (p.presupuesto_base_total ?? 0) > 0);
               const cols = mostrarBase ? "1fr 140px 140px 140px 140px" : "1fr 150px 150px 150px";
               return (
-                <div className="space-y-2">
+                <div className="overflow-x-auto">
+                <div className="space-y-2" style={{ minWidth: mostrarBase ? "720px" : "580px" }}>
                   <div className="grid text-xs text-muted-foreground uppercase" style={{ gridTemplateColumns: cols }}>
                     <span>Obra</span>
                     <span>Presupuesto</span>
@@ -128,6 +131,7 @@ export default function AlertasPage() {
                       </span>
                     </div>
                   ))}
+                </div>
                 </div>
               );
             })()}

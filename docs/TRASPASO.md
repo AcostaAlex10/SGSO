@@ -112,6 +112,7 @@ Programador**. Para no pisarse:
 
 | Ítem | Sesión | Estado | Pendiente |
 |---|---|---|---|
+| D-07 parte 1 (RNF01, celular) | Nube | Hecho en el PR #110 (2026-11-14): guion `movil.mjs` (212 comprobaciones, a mano) y arreglos; revisado por un agente distinto y con los hallazgos arreglados. Tablas anchas con scroll dentro de la tarjeta (decidido por Alex) | Visto bueno de Alex. Teléfono real (PDF de D-06, cámara en Documentación, teclado con coma); RNF02 con una persona; decidir botones de 44 px en toda la app, texto chico del sidebar y restos de marca; sumar `movil.mjs` y `exportar.mjs` al CI (workflow) |
 | D-06 (RF37, resúmenes CSV y PDF) | Nube | **Mergeado** en el #108 el 2026-11-14, revisado por un agente distinto y con los hallazgos arreglados | Sumar `node scripts/pruebas/exportar.mjs` al CI (toca el workflow, pide a Alex); probar el PDF en el celular (D-07) |
 | B-03 (PR #99, migraciones versionadas) | Local | **Mergeado** el 2026-11-06 (`f39030d`); migraciones corridas en Aiven el 2026-11-07, sin cambios; el #23 se cerró | Decisión de Alex: si `migrar.php` se corre solo en el arranque de Render. Borrar la rama vieja `claude/migraciones-versionadas` (pide a Alex) |
 | Triaje de Dependabot #100 a #106 | Nube | Hecho el 2026-11-14: #100 y #102 mergeados; #101, #103, #104, #105 y #106 cerrados | — |

@@ -304,8 +304,8 @@ export default function ProyectosPage() {
             <DialogDescription>Complete la información del proyecto. Todos los campos son obligatorios.</DialogDescription>
           </DialogHeader>
           <form onSubmit={guardar} noValidate className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2 col-span-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2 sm:col-span-2">
                 <Label htmlFor="nombre">Nombre del Proyecto *</Label>
                 <Input id="nombre" value={form.nombre} onChange={(e) => cambiar("nombre", e.target.value)} placeholder="Ej: Obra Vial Ruta 14" aria-required="true" aria-invalid={!!errores.nombre} />
                 <AvisoCampo mensaje={errores.nombre} />
@@ -343,7 +343,7 @@ export default function ProyectosPage() {
                 <Input id="fecha" type="date" min={editandoId ? undefined : HOY} value={form.fechaInicio} onChange={(e) => cambiar("fechaInicio", e.target.value)} aria-required="true" aria-invalid={!!errores.fechaInicio} />
                 <AvisoCampo mensaje={errores.fechaInicio} />
               </div>
-              <div className="space-y-2 col-span-2">
+              <div className="space-y-2 sm:col-span-2">
                 <Label htmlFor="presupuesto">Presupuesto Estimado (ARS) *</Label>
                 <Input id="presupuesto" type="number" value={form.presupuesto} onChange={(e) => cambiar("presupuesto", e.target.value)} placeholder="0.00" min="0" step="0.01" aria-required="true" aria-invalid={!!errores.presupuesto} />
                 <AvisoCampo mensaje={errores.presupuesto} />
@@ -352,7 +352,7 @@ export default function ProyectosPage() {
                   sale del listado, asi las opciones no cambian si el usuario
                   elige "Cancelada" y despues se arrepiente. */}
               {editandoId && (
-                <div className="space-y-2 col-span-2">
+                <div className="space-y-2 sm:col-span-2">
                   <Label htmlFor="estado">Estado</Label>
                   <Select
                     value={form.estado}
