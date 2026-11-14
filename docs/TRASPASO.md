@@ -113,7 +113,7 @@ Programador**. Para no pisarse:
 | Ítem | Sesión | Estado | Pendiente |
 |---|---|---|---|
 | B-03 (PR #99, migraciones versionadas) | Local | **Mergeado** el 2026-11-06 (`f39030d`); migraciones corridas en Aiven el 2026-11-07, sin cambios; el #23 se cerró | Decisión de Alex: si `migrar.php` se corre solo en el arranque de Render. Borrar la rama vieja `claude/migraciones-versionadas` (pide a Alex) |
-| Triaje de Dependabot #100 a #106 | Nube | Hecho el 2026-11-14 (ver "PR abiertos"); nada mergeado | El visto bueno de Alex para cada PR |
+| Triaje de Dependabot #100 a #106 | Nube | Hecho el 2026-11-14: #100 y #102 mergeados; #101, #103, #104, #105 y #106 cerrados | Mergear el #109 (reemplaza al #103) |
 
 **Estado del repositorio al 2026-11-06** (revisado con `gh` y `origin/main`):
 `main` @ `eca5e8a` con CI en verde en los últimos cinco pushes. El único PR
@@ -176,8 +176,9 @@ Riesgo R-10 de `OPERACION.md` §8.
 
 ### PR abiertos
 
-Al 2026-11-14 **los únicos PR abiertos son siete de Dependabot** (#100 a #106,
-del 2026-11-09). El #99 (B-03) se mergeó el 2026-11-06 y el #23 se cerró sin
+Al 2026-11-14 están abiertos el #107 (este traspaso), el #108 (D-06) y el #109
+(`@vitejs/plugin-react` 6.2.1, que reemplaza al #103). Los siete de Dependabot del
+2026-11-09 ya se resolvieron (tabla de abajo). El #99 (B-03) se mergeó el 2026-11-06 y el #23 se cerró sin
 mergear. Para la próxima migración, lo mismo que con B-03:
 
 ```bash
@@ -188,19 +189,19 @@ php back/sql/migrar.php            # aplica lo pendiente
 Con las credenciales de la base (`DB_SSL=true` y `DB_SSL_CA`), desde la máquina
 de alguien del equipo. Detalle en `OPERACION.md` §7.
 
-**Triaje de Dependabot (sesión en la nube, 2026-11-14).** Ninguno se mergeó:
-todos esperan el visto bueno de Alex. La trampa 20 se revisó: los paquetes de
-los tres en verde se usan de verdad.
+**Triaje de Dependabot (sesión en la nube, 2026-11-14).** Alex dio el visto
+bueno: los rojos se cerraron y los verdes se mergearon de a uno. La trampa 20 se
+revisó: los paquetes de los tres en verde se usan de verdad.
 
 | PR | Qué sube | CI | Recomendación |
 |---|---|---|---|
-| #100 | `phpstan` 2.3.4 → 2.3.5 | Verde | Mergear |
-| #102 | Menores del front: `lucide-react` 1.70, `tailwindcss` y `@tailwindcss/vite`, `vite` | Verde | Mergear |
-| #103 | `@vitejs/plugin-react` 5.2 → 6.2.1 (mayor) | Verde | Mergear después del #102, mirando el login en la preview de Vercel |
-| #101 | `phpunit` 11.5 → 13.4.6 | Rojo: "lock file does not contain a compatible set of packages" | **Cerrar.** PHPUnit 13 pide PHP ≥ 8.4.1, y el CI y `back/Dockerfile` usan PHP 8.3. PHPUnit 12 sí anda con 8.3. Subir a PHP 8.4 es una decisión aparte (imagen de Render, freno de A-18) |
-| #104 | `react-dom` 18 → 19 | Rojo: Playwright, `TimeoutError` | **Cerrar.** Dependabot separó React en dos PR, y `react-dom` 19 con `react` 18 no arranca |
-| #106 | `react` 18 → 19 | Rojo: Playwright, `TimeoutError` | **Cerrar**, por lo mismo que el #104 |
-| #105 | `react-router` 7.18 → 8.5.1 | Rojo: Playwright, `TimeoutError` | **Cerrar.** React Router 8 pide `react` y `react-dom` ≥ 19.2.7 |
+| #100 | `phpstan` 2.3.4 → 2.3.5 | Verde | **Mergeado** |
+| #102 | Menores del front: `lucide-react` 1.70, `tailwindcss` y `@tailwindcss/vite`, `vite` | Verde | **Mergeado** |
+| #103 | `@vitejs/plugin-react` 5.2 → 6.2.1 (mayor) | Verde | **Cerrado**: después del #102 quedó en conflicto en `package-lock.json`. Lo reemplaza el #109 |
+| #101 | `phpunit` 11.5 → 13.4.6 | Rojo: "lock file does not contain a compatible set of packages" | **Cerrado.** PHPUnit 13 pide PHP ≥ 8.4.1, y el CI y `back/Dockerfile` usan PHP 8.3. PHPUnit 12 sí anda con 8.3. Subir a PHP 8.4 es una decisión aparte (imagen de Render, freno de A-18) |
+| #104 | `react-dom` 18 → 19 | Rojo: Playwright, `TimeoutError` | **Cerrado.** Dependabot separó React en dos PR, y `react-dom` 19 con `react` 18 no arranca |
+| #106 | `react` 18 → 19 | Rojo: Playwright, `TimeoutError` | **Cerrado**, por lo mismo que el #104 |
+| #105 | `react-router` 7.18 → 8.5.1 | Rojo: Playwright, `TimeoutError` | **Cerrado.** React Router 8 pide `react` y `react-dom` ≥ 19.2.7 |
 
 **Pasar a React 19 es una tarea, no un PR de Dependabot:** `react`, `react-dom`,
 `@types/react`, `@types/react-dom` y `react-is` (par de recharts) juntos,
@@ -520,6 +521,19 @@ Cada una de estas hizo perder al menos media hora. Están acá para no repetirla
     a D-24 al integrar `main`. Lo mismo vale para los RF, los DEC y estas
     trampas. Antes de mergear, `git grep` del número contra
     `origin/main`; el que llega segundo se renumera.
+42. **Claude no puede darle órdenes a Dependabot.** El filtro de GitHub le mete
+    `·` a un `@dependabot rebase` o `recreate` escrito por Claude, y Dependabot
+    no lo ve (2026-11-14, #102). Para poner al día un PR de Dependabot atrasado
+    se usa `gh api -X PUT repos/AcostaAlex10/SGSO/pulls/<n>/update-branch`, y se
+    mergea con squash para que no entren commits ajenos. Si queda en conflicto
+    (el `package-lock.json` de dos PR del front), o Alex comenta `@dependabot
+    recreate` o se cierra y se abre un PR propio con la misma subida (#109).
+43. **En la nube, el clon superficial solo sigue a `main`.** El `git clone
+    --depth 1` deja `remote.origin.fetch` apuntando solo a `main`, así que una
+    rama pusheada con `-u` no tiene rama remota de seguimiento y el hook de
+    cierre dice que hay commits sin pushear aunque estén en GitHub. Se arregla
+    con `git config --add remote.origin.fetch
+    '+refs/heads/<rama>:refs/remotes/origin/<rama>'` y `git fetch origin`.
 
 ### Si la sesión corre en la nube y no en tu máquina
 
@@ -535,8 +549,8 @@ cargar Google Fonts detrás del proxy del entorno. **No es una regresión.** En 
 CI de GitHub da 28/28.
 
 **Las trampas 9, 10, 11, 13, 17, 21, 33, 35, 36, 37 y 38 son de la máquina local** (Windows,
-antivirus, `back/.env`): en la nube no aplican. La 12, la 14, la 19, la 31, la 34, la 39 y la 41 valen para las dos, y de la 22 a
-la 28 y la 40 son propias de la nube. En la nube tampoco hay `back/.env`, así que
+antivirus, `back/.env`): en la nube no aplican. La 12, la 14, la 19, la 31, la 34, la 39, la 41 y la 42 valen para las dos, y de la 22 a
+la 28, la 40 y la 43 son propias de la nube. En la nube tampoco hay `back/.env`, así que
 no hay forma de pegarle a producción por accidente, y así tiene que seguir.
 
 ---
