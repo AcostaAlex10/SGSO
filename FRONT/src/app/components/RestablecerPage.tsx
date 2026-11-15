@@ -34,7 +34,7 @@ export default function RestablecerPage() {
   }
 
   return (
-    <div className="flex items-center justify-center" style={{ minHeight: "100vh", background: "var(--background)", padding: "24px" }}>
+    <div className="flex items-center justify-center" style={{ minHeight: "100vh", background: "var(--background)", padding: "calc(24px + var(--area-segura-arriba)) 24px calc(24px + var(--area-segura-abajo))" }}>
       <div style={{ width: "100%", maxWidth: "380px", background: "var(--card)", border: "1px solid var(--border)", borderRadius: "6px", padding: "32px 28px" }}>
         <div className="flex items-center gap-3" style={{ marginBottom: "20px" }}>
           <div className="flex items-center justify-center" style={{ width: "38px", height: "38px", background: "var(--primary)", borderRadius: "4px" }}>
