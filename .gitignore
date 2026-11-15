@@ -1,5 +1,7 @@
 **/node_modules/
 **/dist/
+# Variables de entorno de cada maquina (por ejemplo FRONT/.env.android.local).
+FRONT/.env*.local
 # Caché del grafo de conocimiento (herramienta externa, no es del proyecto).
 graphify-out/
 # Worktrees de las sesiones de Claude Code.

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- El color de fondo ("background") de FRONT/src/styles/theme.css. Es lo que se ve detras
+         de la barra de estado y de la de gestos cuando la WebView no llega
+         hasta el borde (WebView anterior a la 140). -->
+    <color name="fondo_sgso">#0b0e15</color>
+</resources>
