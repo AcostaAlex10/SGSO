@@ -133,6 +133,13 @@ Todas las rutas salvo las públicas cuelgan del layout `Root`, que exige sesión
 - Alias `@` → `FRONT/src`. Pantallas en `src/app/components/`; primitivos de
   shadcn/ui en `src/app/components/ui/`.
 - Tema oscuro con acento naranja (`--primary: #e8981e`) en `src/styles/theme.css`.
+- **Aplicación Android:** Capacitor envuelve este mismo build en una WebView
+  (`FRONT/capacitor.config.ts`, proyecto nativo en `FRONT/android/`). Lo único
+  propio de la aplicación es el botón atrás (`src/app/nativo/`, que la web no
+  descarga) y el relleno de las zonas que tapa el teléfono
+  (`--area-segura-*` en `theme.css`, que en un navegador vale 0). Su origen es
+  `https://localhost`, y la API lo tiene que aceptar en CORS. Ver
+  [FRONT/README.md](../FRONT/README.md).
 
 ### Módulo → código
 
