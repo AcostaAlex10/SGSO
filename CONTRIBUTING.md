@@ -31,7 +31,7 @@ rama sin entrada es una rama que nadie va a saber para qué estaba.
 | Rama | Desde | Para qué | PR |
 |---|---|---|---|
 | `claude/app-android-capacitor` | `main` @ `893052e` (2026-11-15) | SGSO como aplicación Android con Capacitor, envolviendo el build de `FRONT/`: proyecto nativo, safe areas, botón atrás, ícono y splash. Sin ítem del plan todavía: lo define Alex (choca con RF41 y D-28, que dicen PWA) | PR #114 (borrador) |
-| `claude/traspaso-dependabot-111-113` | `main` @ `0480e04` (2026-11-21) | `TRASPASO.md` con el triaje de Dependabot #111 a #113 y D-07 parte 1 mergeado | — |
+| `claude/traspaso-dependabot-111-113` | `main` @ `0480e04` (2026-11-21) | `TRASPASO.md` con el triaje de Dependabot #111 a #113 y D-07 parte 1 mergeado | PR #115 |
 
 ### Reglas
 
