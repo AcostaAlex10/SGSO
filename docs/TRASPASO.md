@@ -4,10 +4,10 @@ Este archivo existe porque las sesiones locales de Claude Code se pierden con
 cada corte de luz o reinicio brusco. **Lo que no está acá ni en el repositorio,
 se perdió.** Una sesión nueva empieza leyendo esto.
 
-- **Actualizado:** 2026-11-14, desde la sesión en la nube: B-03 mergeado (#99) y triaje de Dependabot #100 a #106 (sección 3). El 2026-11-03 el producto volvió
+- **Actualizado:** 2026-11-21, desde la sesión local: D-07 parte 1 mergeado (#110), triaje de Dependabot #111 a #113 y la aplicación Android en el PR #114, en borrador (sección 3). El 2026-11-03 el producto volvió
   a llamarse **SGSO** (Sistema de Gestión y Seguimiento Operativo de obras,
   DEC-01); el repositorio de GitHub también se renombró a `SGSO`
-- **Base:** `main` @ `e5fb34a` (2026-11-14, #109). **La base de Aiven se volvió a apagar** y se
+- **Base:** `main` @ `0480e04` (2026-11-21, #112). **La base de Aiven se volvió a apagar** y se
   encendió el 2026-11-04 (riesgo R-01): `/api/health` responde
   `{"status":"ok","db":"ok"}`. **La URL de producción ahora es
   `https://sgsos.vercel.app`**; la anterior sigue conectada. **Brevo ya funciona**: Alex
