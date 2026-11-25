@@ -34,7 +34,7 @@ export default function LoginPage() {
   return (
     <div
       className="flex items-center justify-center"
-      style={{ minHeight: "100vh", background: "var(--background)", padding: "24px" }}
+      style={{ minHeight: "100vh", background: "var(--background)", padding: "calc(24px + var(--area-segura-arriba)) 24px calc(24px + var(--area-segura-abajo))" }}
     >
       <form
         onSubmit={handleSubmit}

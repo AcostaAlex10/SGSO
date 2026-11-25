@@ -125,7 +125,14 @@ export default function Root() {
   const currentPage = navItems.find(n => isActive(n.path))?.label ?? "Dashboard";
 
   return (
-    <div className="flex h-dvh overflow-hidden print:block print:h-auto print:overflow-visible" style={{ background: "var(--background)" }}>
+    <div
+      className="flex h-dvh overflow-hidden print:block print:h-auto print:overflow-visible"
+      style={{
+        background: "var(--background)",
+        paddingLeft: "var(--area-segura-izquierda)",
+        paddingRight: "var(--area-segura-derecha)",
+      }}
+    >
       <div className="print:hidden"><Toaster position="top-right" theme="dark" /></div>
 
       {/* Sidebar */}
@@ -142,6 +149,8 @@ export default function Root() {
           background: "var(--sidebar)",
           borderRight: "1px solid var(--sidebar-border)",
           flexShrink: 0,
+          paddingTop: "var(--area-segura-arriba)",
+          paddingBottom: "var(--area-segura-abajo)",
         }}
       >
         {/* Logo */}
@@ -314,7 +323,8 @@ export default function Root() {
         <header
           className="flex items-center justify-between gap-2 flex-shrink-0 px-3 sm:px-6 print:hidden"
           style={{
-            height: "48px",
+            height: "calc(48px + var(--area-segura-arriba))",
+            paddingTop: "var(--area-segura-arriba)",
             background: "var(--card)",
             borderBottom: "1px solid var(--border)",
           }}
@@ -368,7 +378,11 @@ export default function Root() {
         {/* Content */}
         <main
           className="flex-1 overflow-y-auto print:overflow-visible print:!p-0 print:!bg-white"
-          style={{ padding: "24px", background: "var(--background)" }}
+          style={{
+            padding: "24px",
+            paddingBottom: "calc(24px + var(--area-segura-abajo))",
+            background: "var(--background)",
+          }}
         >
           <Outlet />
         </main>

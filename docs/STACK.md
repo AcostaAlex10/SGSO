@@ -16,8 +16,10 @@ Qué usa el sistema hoy, con las versiones de los lockfiles. Actualizado el
 | Gráficos | recharts 3.10.1, con `react-is` 18.3.1 |
 | Avisos | sonner 2.0.8 |
 | Demo sin backend | simulador propio en `src/app/mock/`, activado con `VITE_MOCK=1` |
+| Aplicación Android | Capacitor 8.6.2 (`@capacitor/core`, `@capacitor/android` y `@capacitor/cli`) más `@capacitor/app` 8.1.2, envolviendo el mismo build de Vite; proyecto nativo en `FRONT/android/` |
 
-Son 16 dependencias, y se usan todas. **`react-is` no lo importa ningún
+Son 19 dependencias, y se usan todas (las tres de Capacitor, solo dentro de la
+aplicación Android: la web no las descarga). **`react-is` no lo importa ningún
 archivo, pero no se borra:** lo necesita recharts, y sin él el build falla. Su
 versión tiene que ser la misma que la de `react`.
 

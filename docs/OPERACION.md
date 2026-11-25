@@ -402,6 +402,20 @@ versiones menores y parches vienen agrupados y alcanza con que el CI esté en
 verde. Los de una versión mayor vienen sueltos, y antes de mergearlos hay que
 leer qué rompe, como se hizo con las actions en el PR #13.
 
+### Aplicación Android
+
+**El login de la aplicación queda en "Ingresando..." y no entra.** La WebView de
+Android se presenta con el origen `https://localhost`, y si la API no lo tiene
+en su lista blanca de CORS, el navegador descarta todas las respuestas. En el
+log del teléfono (`adb logcat`, etiqueta `Capacitor/Console`) aparece `blocked
+by CORS policy`; en el de Render no aparece nada, porque el pedido se corta
+antes. Se resuelve sumando `https://localhost` a `CORS_ORIGIN` en Render. Al
+2026-11-15 **no está cargado**: la aplicación solo se probó con el simulador.
+
+**El build falla con `invalid source release: 21`.** Capacitor 8 compila con
+Java 21 y `JAVA_HOME` apunta a un JDK anterior. Sirve el JDK de Android Studio
+(su carpeta `jbr`).
+
 ### Sesión
 
 **Una cuenta tiene una sola sesión.** Entrar desde otro lado cierra la anterior.

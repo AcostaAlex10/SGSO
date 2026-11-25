@@ -112,6 +112,7 @@ Programador**. Para no pisarse:
 
 | Ítem | Sesión | Estado | Pendiente |
 |---|---|---|---|
+| Aplicación Android con Capacitor (sin ítem del plan todavía) | Local, en la PC de Octavio | Rama `claude/app-android-capacitor`, commits del 2026-11-15, en GitHub desde el 2026-11-21 y con el PR #114 en borrador desde el 2026-11-21. El 2026-11-21 se movieron los tests de la plantilla al paquete `com.triwe.sgso` y se fijó el SHA-256 de Gradle; `movil.mjs` siguió en 212/212. APK debug compilado y probado en un emulador Pixel 8 (Android 16, WebView 133) con el simulador: login, una pantalla por cada uno de los cuatro roles, botón atrás, ícono y splash. La web no cambió: `typecheck`, `build`, las cinco suites y `movil.mjs` en verde | **Decisiones de Alex:** si Capacitor reemplaza o convive con la PWA de RF41 y D-28, y con qué ítem y RF se registra; visto bueno a las cuatro dependencias (`@capacitor/core`, `android`, `app` y `cli`); `appId` definitivo (hoy `com.triwe.sgso`); sumar `https://localhost` a `CORS_ORIGIN` en Render, sin lo cual la aplicación no puede hablar con la API real (comprobado en el log del emulador). **Sin probar:** la API real, un teléfono físico, una WebView 140 o más nueva (ahí el relleno lo hace el CSS y no Android). **Límites conocidos:** exportar PDF y CSV (D-06) no se probó dentro de la aplicación; el botón atrás con un diálogo abierto cambia de pantalla en vez de cerrarlo |
 | D-07 parte 1 (RNF01, celular) | Nube | **Mergeado** en el #110 el 2026-11-14 (`893052e`): guion `movil.mjs` (212 comprobaciones, a mano) y arreglos; revisado por un agente distinto y con los hallazgos arreglados. Tablas anchas con scroll dentro de la tarjeta (decidido por Alex) | Teléfono real (PDF de D-06, cámara en Documentación, teclado con coma); RNF02 con una persona; decidir botones de 44 px en toda la app, texto chico del sidebar y restos de marca; sumar `movil.mjs` y `exportar.mjs` al CI (workflow) |
 | D-06 (RF37, resúmenes CSV y PDF) | Nube | **Mergeado** en el #108 el 2026-11-14, revisado por un agente distinto y con los hallazgos arreglados | Sumar `node scripts/pruebas/exportar.mjs` al CI (toca el workflow, pide a Alex); probar el PDF en el celular (D-07) |
 | B-03 (PR #99, migraciones versionadas) | Local | **Mergeado** el 2026-11-06 (`f39030d`); migraciones corridas en Aiven el 2026-11-07, sin cambios; el #23 se cerró | Decisión de Alex: si `migrar.php` se corre solo en el arranque de Render. Borrar la rama vieja `claude/migraciones-versionadas` (pide a Alex) |
@@ -179,8 +180,8 @@ Riesgo R-10 de `OPERACION.md` §8.
 
 ### PR abiertos
 
-Al 2026-11-21 están abiertos el #114 (aplicación Android, en borrador), que
-espera decisiones de Alex, y el de este traspaso. Los de Dependabot del 2026-11-09 y del 2026-11-16 ya
+Al 2026-11-25 el único abierto es el #114 (aplicación Android, en borrador), que
+espera decisiones de Alex. El #115 (este traspaso) se mergeó el 2026-11-25. Los de Dependabot del 2026-11-09 y del 2026-11-16 ya
 se resolvieron (tablas de abajo). El #99 (B-03) se mergeó el 2026-11-06 y el #23 se cerró sin
 mergear. Para la próxima migración, lo mismo que con B-03:
 
