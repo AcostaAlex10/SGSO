@@ -4,10 +4,10 @@ Este archivo existe porque las sesiones locales de Claude Code se pierden con
 cada corte de luz o reinicio brusco. **Lo que no está acá ni en el repositorio,
 se perdió.** Una sesión nueva empieza leyendo esto.
 
-- **Actualizado:** 2026-11-21, desde la sesión local: D-07 parte 1 mergeado (#110) y la aplicación Android en el PR #114, en borrador (sección 3). El 2026-11-03 el producto volvió
+- **Actualizado:** 2026-11-21, desde la sesión local: D-07 parte 1 mergeado (#110), triaje de Dependabot #111 a #113 y la aplicación Android en el PR #114, en borrador (sección 3). El 2026-11-03 el producto volvió
   a llamarse **SGSO** (Sistema de Gestión y Seguimiento Operativo de obras,
   DEC-01); el repositorio de GitHub también se renombró a `SGSO`
-- **Base:** `main` @ `e5fb34a` (2026-11-14, #109). **La base de Aiven se volvió a apagar** y se
+- **Base:** `main` @ `0480e04` (2026-11-21, #112). **La base de Aiven se volvió a apagar** y se
   encendió el 2026-11-04 (riesgo R-01): `/api/health` responde
   `{"status":"ok","db":"ok"}`. **La URL de producción ahora es
   `https://sgsos.vercel.app`**; la anterior sigue conectada. **Brevo ya funciona**: Alex
@@ -117,6 +117,7 @@ Programador**. Para no pisarse:
 | D-06 (RF37, resúmenes CSV y PDF) | Nube | **Mergeado** en el #108 el 2026-11-14, revisado por un agente distinto y con los hallazgos arreglados | Sumar `node scripts/pruebas/exportar.mjs` al CI (toca el workflow, pide a Alex); probar el PDF en el celular (D-07) |
 | B-03 (PR #99, migraciones versionadas) | Local | **Mergeado** el 2026-11-06 (`f39030d`); migraciones corridas en Aiven el 2026-11-07, sin cambios; el #23 se cerró | Decisión de Alex: si `migrar.php` se corre solo en el arranque de Render. Borrar la rama vieja `claude/migraciones-versionadas` (pide a Alex) |
 | Triaje de Dependabot #100 a #106 | Nube | Hecho el 2026-11-14: #100 y #102 mergeados; #101, #103, #104, #105 y #106 cerrados | — |
+| Triaje de Dependabot #111 a #113 | Local | Hecho el 2026-11-21 con el visto bueno de Alex: #112 mergeado (`0480e04`); #111 y #113 cerrados con el motivo en cada uno (detalle en "PR abiertos") | Agrupar o ignorar las mayores de `react*` y `phpunit` en `.github/dependabot.yml`, para que no vuelvan a abrirse (pide a Alex) |
 
 **Estado del repositorio al 2026-11-06** (revisado con `gh` y `origin/main`):
 `main` @ `eca5e8a` con CI en verde en los últimos cinco pushes. El único PR
@@ -179,9 +180,9 @@ Riesgo R-10 de `OPERACION.md` §8.
 
 ### PR abiertos
 
-Al 2026-11-14 están abiertos el #107 (este traspaso) y el #108 (D-06). El #109
-(`@vitejs/plugin-react` 6.2.1, que reemplaza al #103) se mergeó. Los siete de Dependabot del
-2026-11-09 ya se resolvieron (tabla de abajo). El #99 (B-03) se mergeó el 2026-11-06 y el #23 se cerró sin
+Al 2026-11-25 el único abierto es el #114 (aplicación Android, en borrador), que
+espera decisiones de Alex. El #115 (este traspaso) se mergeó el 2026-11-25. Los de Dependabot del 2026-11-09 y del 2026-11-16 ya
+se resolvieron (tablas de abajo). El #99 (B-03) se mergeó el 2026-11-06 y el #23 se cerró sin
 mergear. Para la próxima migración, lo mismo que con B-03:
 
 ```bash
@@ -212,6 +213,19 @@ y recién después `react-router` 8. Hay que probar shadcn/Radix y recharts con
 las cinco suites de Playwright. Para que Dependabot no los vuelva a abrir por
 separado, conviene agruparlos en `.github/dependabot.yml` o ignorar las mayores
 hasta hacer la migración; tocar `dependabot.yml` también pide a Alex.
+
+**Triaje de Dependabot (sesión local, 2026-11-21).** Los tres llegaron el
+2026-11-16. Alex dio el visto bueno al cierre del #111 y del #113 y al merge del
+#112. Para la trampa 20 se buscó en `FRONT/src` y en `vite.config.ts`: `lucide-react`
+se importa en 19 archivos y `@vitejs/plugin-react` en `vite.config.ts`. Los dos
+cerrados vuelven a abrirse con cada versión nueva hasta que se toque
+`dependabot.yml`.
+
+| PR | Qué sube | CI | Resultado |
+|---|---|---|---|
+| #112 | Menores del front: `lucide-react` 1.72, `@vitejs/plugin-react` 6.3.0, `vite` 8.3.8 | Verde | **Mergeado** (`0480e04`). El #114 (Android) quedó en conflicto en `package-lock.json` y se resolvió con un merge de `main` (`cb3d69b`) |
+| #111 | `phpunit` 11.5.56 → 13.4.7 | Rojo | **Cerrado.** Es el mismo caso que el #101: PHPUnit 13 pide PHP ≥ 8.4.1 y usamos 8.3 |
+| #113 | `react-is` 18.3.1 → 19.3.1 | Verde | **Cerrado.** `react-is` tiene que tener la misma mayor que `react` (`STACK.md`), y `react` sigue en 18. El CI pasa porque nada lo importa directo, pero recharts lo usa para reconocer elementos de React, y la 19 no reconoce los de React 18. Va con la migración a React 19 |
 
 ### El informe de testing del Grupo 9
 
