@@ -30,7 +30,8 @@ rama sin entrada es una rama que nadie va a saber para qué estaba.
 
 | Rama | Desde | Para qué | PR |
 |---|---|---|---|
-| `claude/d07-celular` | `main` @ `f4caa10` (2026-11-14) | D-07 parte 1 (RNF01): guion `movil.mjs` y arreglos de desborde, toque y diálogos en el celular | #110 |
+| `claude/app-android-capacitor` | `main` @ `893052e` (2026-11-15) | SGSO como aplicación Android con Capacitor, envolviendo el build de `FRONT/`: proyecto nativo, safe areas, botón atrás, ícono y splash. Sin ítem del plan todavía: lo define Alex (choca con RF41 y D-28, que dicen PWA) | PR #114 (borrador) |
+| `claude/traspaso-dependabot-111-113` | `main` @ `0480e04` (2026-11-21) | `TRASPASO.md` con el triaje de Dependabot #111 a #113 y D-07 parte 1 mergeado | PR #115 |
 
 ### Reglas
 
@@ -191,6 +192,7 @@ El trabajo sigue en `main`; los PR explican por qué el código quedó como qued
 | `claude/plugin-react-6` | `@vitejs/plugin-react` 5.2.0 → 6.2.1; reemplazó al #103 de Dependabot | PR #109 |
 | `claude/traspaso-dependabot` | `TRASPASO.md` al día con el merge del #99 y el triaje de Dependabot #100 a #106 | PR #107 |
 | `claude/d06-resumenes` | D-06 (RF37): exportar los resúmenes de avance y materiales de una obra en CSV y PDF por impresión | PR #108 |
+| `claude/d07-celular` | D-07 parte 1 (RNF01): guion `movil.mjs` y arreglos de desborde, toque y diálogos en el celular | PR #110 |
 
 ### Dos cosas que no conviene repetir
 
